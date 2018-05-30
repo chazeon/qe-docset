@@ -1,5 +1,4 @@
 #!/usr/bin/env sh
-QE_DOCDIR=/mnt/c/Standalone/qe-6.2.1/Doc
 QE_DOCDIR=
 
 DOCSET_DIR=QuantumESPRESSO.docset
