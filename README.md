@@ -1,20 +1,20 @@
 # QE docset
 
-The scripts in this repo is designated to generated a docset for [Quantum ESPRESSO](https://www.quantum-espresso.org/) (QE), an open-source package for electronic-structure calculations and materials modeling at the nanoscale, which should work with offline API Documentation Browsers such as [Dash](https://kapeli.com/dash) and [Zeal](https://zealdocs.org/).
+The scripts in this repo is designated to generated a docset for [Quantum ESPRESSO](https://www.quantum-espresso.org/) (QE), an open-source package for electronic-structure calculations and materials modeling at the nanoscale, which should work with offline API documentation browsers such as [Dash](https://kapeli.com/dash) and [Zeal](https://zealdocs.org/).
 
 ## Usage
 
-This script generate needs to use documents from `Doc` directory from original QE repository.
+This script needs to use documents from `Doc` directory from original QE repository.
 
 ### Build original code
 
-Download original QE code suite from [official website](https://www.quantum-espresso.org/download), which will show your way to the [GitLab](https://gitlub.com/QEF/q-e) or [GitHub](https://github.com/QEF/q-e) repo, and do the configure and build the doc by running
+Download original QE code suite from [official website](https://www.quantum-espresso.org/download), which will show your way to the [GitLab](https://gitlab.com/QEF/q-e) or [GitHub](https://github.com/QEF/q-e) repo, and do the configure and build the doc by running
 ```sh
 ./configure [options]
 make doc
 ```
 
-And the generated docs lies in the `Doc/` folder.
+and the generated docs will lie in the `Doc/` folder.
 
 ### Install the dependencies
 
@@ -22,7 +22,7 @@ The project depends on [Beautiful Soup 4](https://www.crummy.com/software/Beauti
 ```sh
 python3 -m pip install -r requirements.txt
 ```
-as long as you have Python's [PIP](https://pypi.org/project/pip/) installed.
+as long as you have Python's [pip](https://pypi.org/project/pip/) installed.
 
 ### Generating the docset
 
