@@ -1,6 +1,8 @@
 # Project generated files
 QuantumESPRESSO.tgz
 QuantumESPRESSO.docset/Contents/Resources/
+meta.json
+docset.json
 
 # macOS
 .DS_Store

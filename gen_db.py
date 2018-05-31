@@ -86,16 +86,11 @@ def process_sections(session, package_name: str, filename: str, soup):
         })
 
         path = '%s#%s' % (filename, anchor_name)
-        #session.add(SearchIndex(
-            #name=name,
-            #type='Section',
-            #path=path
-        #))
 
         section_span.insert_before(anchor)
 
     for section_span in soup.select('span.card'):
-        section_name = section_span.contents[0]
+        section_name = str(section_span.contents[0]).strip()
         name = '%s.%s' % (package_name, section_name)
 
         anchor_name = generate_anchor_name('Section', section_name)
@@ -106,12 +101,6 @@ def process_sections(session, package_name: str, filename: str, soup):
 
         path = '%s#%s' % (filename, anchor_name)
 
-        #session.add(SearchIndex(
-            #name=name,
-            #type='Section',
-            #path=path
-        #))
-
         section_span.insert_before(anchor)
 
 def process_variables(session, package_name: str, filename: str, soup):
@@ -120,7 +109,9 @@ def process_variables(session, package_name: str, filename: str, soup):
         if 'background: #ffff99; padding: 2 2 2 10;' not in variable_th['style']: continue
         variable_name = variable_th.contents[0]
         if type(variable_name) != bs4.element.NavigableString: continue
-        if str(variable_name).strip() == '': continue
+        variable_name = str(variable_name).strip()
+        variable_name = re.sub('\s+', ' ', variable_name)
+        if variable_name == '': continue
         name = '%s.%s' % (package_name, variable_name)
 
         anchor_name = generate_anchor_name('Variable', variable_name)
