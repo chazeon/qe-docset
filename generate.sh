@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-QE_SRCDIR=/mnt/c/Standalone/qe-6.2.1
+QE_SRCDIR=
 QE_DOCDIR=$QE_SRCDIR/Doc
 
 BUILD_DIR=build

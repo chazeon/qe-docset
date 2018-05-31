@@ -41,15 +41,19 @@ as long as you have Python's [pip](https://pypi.org/project/pip/) installed.
 
 ### Generating the docset
 
-Edit the `generate.sh`, point the `QE_DOCDIR` variable to the `Doc/` folder such as `~/qe-6.2.1/Doc/`.
+Edit the `generate.sh`, point the `QE_SRCDIR` variable to the QE's source code folder such as `~/qe-6.2.1`:
 ```sh
-QE_DOCDIR=~/qe-6.2.1/Doc
+QE_DOCDIR=~/qe-6.2.1
 ```
 
 Then run the `generate.sh`. It will:
+* Copy the required files for docset from `res` folder;
 * Copy and edit the HTMLs and related resources to `QuantumESPRESSO.docset/Contents/Resources/Documents/`;
-* Generate the index database at `QuantumESPRESSO.docset/Contents/Resources/docSet.dsidx`;
-* Generate the index page according to the official website.
+* Run `src/gen_db.py` to generate the index database at `QuantumESPRESSO.docset/Contents/Resources/docSet.dsidx`;
+* Run `src/gen_index.py` to generate the index page `index.html` according to the official website;
+* Run `src/gen_version.py` to generate `meta.json` for using in Zeal and `docset.json` for using in submission.
+
+All generated documents will locate in the `build` folder.
 
 The `QuantumESPRESSO.docset` is what you want to copy to your device.
 
