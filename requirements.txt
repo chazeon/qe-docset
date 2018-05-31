@@ -1,2 +1,4 @@
 sqlalchemy
 bs4
+jinja2
+requests

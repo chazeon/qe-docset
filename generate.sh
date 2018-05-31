@@ -18,7 +18,9 @@ rm $RESOURCES_DIR/docSet.dsidx
 # GENERAL USER GUIDE
 
 cp -rL $QE_DOCDIR/user_guide $DOCUMENTS_DIR
+cp -rL $QE_DOCDIR/user_guide.pdf $DOCUMENTS_DIR
 cp -rL $QE_DOCDIR/developer_man $DOCUMENTS_DIR
+cp -rL $QE_DOCDIR/developer_man.pdf $DOCUMENTS_DIR
 
 # INPUT DATA DESCRIPTION
 
@@ -30,11 +32,18 @@ for PACKAGE_NAME in CPV NEB PHonon PP PW
 do
     cp -rL $QE_DOCDIR/../$PACKAGE_NAME/$DOC_REL_PATH \
         $DOCUMENTS_DIR/$(echo $PACKAGE_NAME | sed 's/[[:lower:]]//g' | tr '[:upper:]' '[:lower:]')_user_guide
+    cp -rL $QE_DOCDIR/../$PACKAGE_NAME/$DOC_REL_PATH.pdf \
+        $DOCUMENTS_DIR/$(echo $PACKAGE_NAME | sed 's/[[:lower:]]//g' | tr '[:upper:]' '[:lower:]')_user_guide.pdf
 done
 
-# INDEX GENERATION
+# DATABASE GENERATION
 
-python3 generate.py
+python3 gen_db.py
+
+# INDEX PAGE GENERATION
+
+python3 gen_index.py
+cp logo_header.jpg $DOCUMENTS_DIR/
 
 # CREATING ARCHIVE
 
