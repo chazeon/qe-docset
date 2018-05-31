@@ -3,18 +3,30 @@
 QE_SRCDIR=/mnt/c/Standalone/qe-6.2.1
 QE_DOCDIR=$QE_SRCDIR/Doc
 
-DOCSET_DIR=QuantumESPRESSO.docset
-
+BUILD_DIR=build
+DOCSET_DIR=$BUILD_DIR/QuantumESPRESSO.docset
 CONTENTS_DIR=$DOCSET_DIR/Contents
 RESOURCES_DIR=$CONTENTS_DIR/Resources
 DOCUMENTS_DIR=$RESOURCES_DIR/Documents
+
+RES_DIR=res
+SRC_DIR=src
 
 DOC_REL_PATH=Doc/user_guide
 
 # CLEARING GENERATED DOCUMENTS
 
-rm -r $DOCUMENTS_DIR/*
-rm $RESOURCES_DIR/docSet.dsidx
+rm -r $BUILD_DIR
+
+# GENERATE DOCSET DIRECTORIES
+
+mkdir -p $DOCUMENTS_DIR
+
+# COPY RESOURCES
+
+cp $RES_DIR/icon.png $RES_DIR/icon@2x.png $DOCSET_DIR
+cp $RES_DIR/Info.plist $CONTENTS_DIR
+cp $RES_DIR/logo_header.jpg $DOCUMENTS_DIR
 
 # GENERAL USER GUIDE
 
@@ -39,17 +51,16 @@ done
 
 # DATABASE GENERATION
 
-python3 gen_db.py
+python3 $SRC_DIR/gen_db.py
 
 # INDEX PAGE GENERATION
 
-python3 gen_index.py
-cp logo_header.jpg $DOCUMENTS_DIR/
+python3 $SRC_DIR/gen_index.py
 
 # GENERATE VERSION FILE
 
-cat $QE_SRCDIR/Modules/version.f90 | python3 gen_version.py
+cat $QE_SRCDIR/Modules/version.f90 | python3 $SRC_DIR/gen_version.py
 
 # CREATING ARCHIVE
 
-tar --exclude='.DS_Store' -cvzf QuantumESPRESSO.tgz QuantumESPRESSO.docset
+tar --exclude='.DS_Store' -cvzf $BUILD_DIR/QuantumESPRESSO.tgz $DOCSET_DIR

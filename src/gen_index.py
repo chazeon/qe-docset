@@ -18,7 +18,7 @@ def scrap_content(rel_path: str):
     return soup.select('div.maincontent')[0]
 
 if __name__ == '__main__':
-    with open('index_template.html', encoding='utf8') as fp:
+    with open('res/index_template.html', encoding='utf8') as fp:
         template = jinja2.Template(fp.read())
     rendered = template.render(
         general_document_info=scrap_content('users-manual'),
@@ -26,6 +26,7 @@ if __name__ == '__main__':
         package_specific_documents_info=scrap_content('users-manual/specific-documentation')
     )
     with open(os.path.join(
+        'build',
         'QuantumESPRESSO.docset',
         'Contents',
         'Resources',

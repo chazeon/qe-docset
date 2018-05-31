@@ -9,7 +9,7 @@ from bs4 import BeautifulSoup, Tag
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
-docset_dir = 'QuantumESPRESSO.docset'
+docset_dir = 'build/QuantumESPRESSO.docset'
 contents_dir = os.path.join(docset_dir, 'Contents')
 resources_dir = os.path.join(contents_dir, 'Resources')
 documents_dir = os.path.join(resources_dir, 'Documents')

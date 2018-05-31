@@ -13,7 +13,7 @@ if __name__ == '__main__':
     version_number, svn_revision = get_versions()
     docset_version = "%s.%s" % (version_number, svn_revision)
 
-    with open('docset.json', 'w', encoding='utf8') as fp:
+    with open('build/docset.json', 'w', encoding='utf8') as fp:
         json.dump({
             "name": "Quantum ESPRESSO",
             "version": docset_version,
@@ -25,7 +25,7 @@ if __name__ == '__main__':
             "aliases": ["qe", "quantum-espresso"]
         }, fp, indent=4)
 
-    with open('meta.json', 'w', encoding='utf8') as fp:
+    with open('build/meta.json', 'w', encoding='utf8') as fp:
         json.dump({
             "name": "QuantumESPRESSO",
             "revision": "0",
