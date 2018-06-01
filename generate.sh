@@ -63,4 +63,4 @@ cat $QE_SRCDIR/Modules/version.f90 | python3 $SRC_DIR/gen_version.py
 
 # CREATING ARCHIVE
 
-tar --exclude='.DS_Store' -cvzf $BUILD_DIR/QuantumESPRESSO.tgz $DOCSET_DIR
+tar --exclude='.DS_Store' -cvzf $BUILD_DIR/QuantumESPRESSO.tgz -C $BUILD_DIR QuantumESPRESSO.docset
