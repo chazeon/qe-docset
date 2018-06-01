@@ -24,8 +24,9 @@ Download original QE code suite from [official website](https://www.quantum-espr
 ./configure [options]
 make doc
 ```
-
 and the generated docs will lie in the `Doc/` folder.
+
+Building the doc, however, requires the programs such as `pdflatex`, `latex2pdf`, `tcllib` and `xsltproc` to be usable on your machine. Also a copy of PWgui need to be placed under the source code folder and named `PWgui-[*]`, such as `~/qe-6.2.1/PWgui-6.1`.
 
 ### Install the dependencies
 

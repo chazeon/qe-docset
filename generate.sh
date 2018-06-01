@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-QE_SRCDIR=
+QE_SRCDIR=/mnt/c/Standalone/qe-6.2.1
 QE_DOCDIR=$QE_SRCDIR/Doc
 
 BUILD_DIR=build
@@ -59,7 +59,7 @@ python3 $SRC_DIR/gen_index.py
 
 # GENERATE VERSION FILE
 
-cat $QE_SRCDIR/Modules/version.f90 | python3 $SRC_DIR/gen_version.py
+cat $QE_SRCDIR/dev-tools/release.sh | python3 $SRC_DIR/gen_version.py
 
 # CREATING ARCHIVE
 

@@ -4,14 +4,14 @@ import re
 
 def get_versions() -> (str, str):
     version_f90 = sys.stdin.read()
-    version_number = re.search(r"version_number\s*=\s*'(\d+\.\d+)'", version_f90).group(1)
-    svn_revision = re.search(r"svn_revision\s*=\s*'(\d+)'", version_f90).group(1)
+    version_number = re.search(r"version=(\d+\.\d+.\d+)", version_f90).group(1)
+    svn_revision = re.search(r"revision=(\d+)", version_f90).group(1)
     return version_number, svn_revision
 
 if __name__ == '__main__':
 
     version_number, svn_revision = get_versions()
-    docset_version = "%s.%s" % (version_number, svn_revision)
+    docset_version = "%s (r%s)" % (version_number, svn_revision)
 
     with open('build/docset.json', 'w', encoding='utf8') as fp:
         json.dump({
