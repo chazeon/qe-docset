@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Docset Archive Download - Docset for Quantum ESPRESSO</title>
+    <link href="https://lib.baomitu.com/bulma/0.7.1/css/bulma.min.css" rel="stylesheet">
+    <link href="https://lib.baomitu.com/font-awesome/5.0.8/web-fonts-with-css/css/fontawesome-all.min.css" rel="stylesheet">
+    <script src="https://lib.baomitu.com/vue/2.5.16/vue.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue-resource@1.5.1"></script>
+    <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
+    <script src="js/date_fns.min.js"></script>
+    <link rel="icon" type="image/png" href="images/icon@2x.png">
+  </head>
+  <body style="height: 100vh; font-family: 'Lato', sans-serif;">
+    <section class="hero is-dark" style="background-color: #f34b00;">
+      <div class="hero-head">
+        <header class="navbar">
+          <div class="container">
+            <div class="navbar-brand">
+              <a class="navbar-item" href="index.html">
+                QE Docset
+              </a>
+            </div>
+          </div>
+        </header>
+      </div>
+      <div class="hero-body">
+        <div class="container">
+          <h1 class="title">
+            Docset Archive
+          </h1>
+          <p>
+            Download docsets for Quantum ESPRESSO of older release.
+          </p>
+        </div>
+      </div>
+    </section>
+    <section class="section">
+      <div class="container">
+      <table class="table is-striped is-fullwidth" id="version-list">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Version</th>
+              <th>GitLab Release</th>
+              <th>Download (Cloudflare)</th>
+              <th>Download (Aliyun)</th>
+              <th>Release Date</th>
+            </tr>
+          </thead>
+          <tfoot>
+            <tr>
+              <th>#</th>
+              <th>Version</th>
+              <th>GitLab Release</th>
+              <th>Download (Cloudflare)</th>
+              <th>Download (Aliyun)</th>
+              <th>Release Date</th>
+            </tr>
+          </tfoot>
+          <tbody>
+            <tr v-for="docset in docsets">
+              <td>{{docset.id}}</td>
+              <td><b>{{docset.docset_archive_version}}</b></td>
+              <td><a :href="'https://gitlab.com/QEF/q-e/tags/' + docset.tag.name"><code>{{docset.tag.commit.short_id}}</code></a></td>
+              <td><a :href="'https://qe-docset-archives-intl.zeoncdn.cn/' + docset.archive">
+                <b>{{docset.version}}</b>&nbsp;
+                <span class="icon">
+                  <i class="fas fa-cloud-download-alt"></i>
+                </span> 
+              </a></td>
+              <td><a :href="'https://qe-docset-archives.zeoncdn.cn/' + docset.archive">
+                <b>{{docset.version}}</b>&nbsp;
+                <span class="icon">
+                  <i class="fas fa-cloud-download-alt"></i>
+                </span> 
+              </a></td>
+              <td>{{dateFns.distanceInWordsToNow(docset.tag.commit.committed_date, { addSuffix:true })}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+    <footer class="footer">
+        <div class="container">
+          <div class="content has-text-centered">
+            <p>
+              <strong>QE Docset</strong> by <a href="https://chazeon.com">Chazeon</a> &copy; 2018
+            </p>
+            <p class="buttons" style="display: inline-flex">
+                <a class="button is-small" href="https://github.com/chazeon/qe-docset">
+                  <span class="icon is-small">
+                    <i class="fab fa-github"></i>
+                  </span>
+                  <span>GitHub</span>
+                </a>
+              </p>
+          </div>
+        </div>
+      </footer>
+  </body>
+  <script>
+    Vue.use('vue-resource')
+    var table = new Vue({
+      el: "#version-list",
+      data: {
+        raw_tags: [],
+        raw_docsets: {}
+      },
+      computed: {
+        docsets: function() {
+          return this.getDocsets()
+        }
+      },
+      created: function () {
+        this.updateTagList()
+        this.updateDocsetList()
+      },
+      methods: {
+        updateTagList: function () {
+          this.$http.get('https://gitlab.com/api/v4/projects/QEF%2Fq-e/repository/tags')
+          .then(function (response) {
+            this.raw_tags = response.body
+          })
+        },
+        updateDocsetList: function () {
+          this.$http.get('https://chazeon.github.io/qe-docset/docset.json?_=' + Date.now())
+          .then(function (response) {
+            this.raw_docsets = response.body
+          })
+        },
+        getDocsets: function () {
+          var docsets = []
+          if (!('specific_versions' in this.raw_docsets)) return docsets
+          for (var i = 0; i < this.raw_docsets.specific_versions.length; ++i) {
+            var docset = this.raw_docsets.specific_versions[i]
+            docset.docset_version = docset.version.match(/^([0-9\.]+)/)[1]
+            docset.docset_archive_version = docset.archive.match(/version\/([0-9\.]+)\//)[1]
+            docset.tag = this.raw_tags.filter(function (tag) {
+              var match_tag_version = tag.name.match(/^qe-([0-9\.]+)$/)
+              if (!match_tag_version) return false
+              return match_tag_version[1] == docset.docset_archive_version
+            })[0]
+            docset.id = i + 1
+            docsets.push(docset)
+          }
+          return docsets
+        }
+      },
+      watch: {
+        raw_data: function (val) {
+          console.log('Ready?')
+          if ('tags' in this.raw_data && 'docsets' in this.raw_data) {
+            console.log('Ready.')
+            this.updateDocsets()
+          }
+        }
+      }
+    })
+  </script>
+</html>
