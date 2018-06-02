@@ -4,6 +4,7 @@ import os
 import re
 import urllib.parse
 import bs4
+import uuid
 from bs4 import BeautifulSoup, Tag
 
 from sqlalchemy.ext.declarative import declarative_base
@@ -57,8 +58,12 @@ def generate_anchor_name(entry_type: str, entry_name: str):
 
 def add_entries(session, package_name: str, filename: str, soup):
     section_name = ''
-    for anchor in soup.select('a.dashAnchor'):
+    for anchor, uuid_anchor in zip(
+        soup.select('a.dashAnchor'),
+        soup.select('a.dashUUIDAnchor')
+    ):
         anchor_name = anchor['name']
+        uuid_anchor_name = uuid_anchor['name']
         res = re.search(r'^//apple_ref/([^/]+)/([^/]+)$', anchor_name)
         entry_type = res.group(1)
         item_name = urllib.parse.unquote(res.group(2))
@@ -66,8 +71,11 @@ def add_entries(session, package_name: str, filename: str, soup):
             section_name = item_name
             entry_name = '%s.%s' % (package_name, section_name)
         else:
-            entry_name = '%s.%s.%s' % (package_name, section_name, item_name)
-        path = '%s#%s' % (filename, anchor_name)
+            if section_name != '':
+                entry_name = '%s.%s.%s' % (package_name, section_name, item_name)
+            else:
+                entry_name = '%s.%s' % (package_name, item_name)
+        path = '%s#%s' % (filename, uuid_anchor_name)
         session.add(SearchIndex(
             name=entry_name,
             type=entry_type, 
@@ -75,8 +83,11 @@ def add_entries(session, package_name: str, filename: str, soup):
         ))
 
 def process_sections(session, package_name: str, filename: str, soup):
-    for section_span in soup.select('span.namelist'):
-        section_name = section_span.contents[1]
+    for section_h2 in soup.select('h2'):
+        section_h2_text = section_h2.text
+        res = re.search(r'(Card|Namelist):\s+&?(\S+)', section_h2_text)
+        if not res: continue
+        section_name = res.group(2)
         name = '%s.%s' % (package_name, section_name)
 
         anchor_name = generate_anchor_name('Section', section_name)
@@ -84,24 +95,15 @@ def process_sections(session, package_name: str, filename: str, soup):
             'name': anchor_name,
             'class': 'dashAnchor'
         })
-
-        path = '%s#%s' % (filename, anchor_name)
-
-        section_span.insert_before(anchor)
-
-    for section_span in soup.select('span.card'):
-        section_name = str(section_span.contents[0]).strip()
-        name = '%s.%s' % (package_name, section_name)
-
-        anchor_name = generate_anchor_name('Section', section_name)
-        anchor = Tag(name='a', builder=soup.builder, attrs={
-            'name': anchor_name,
-            'class': 'dashAnchor'
+        uuid_anchor = Tag(name='a', builder=soup.builder, attrs={
+            'name': str(uuid.uuid4()),
+            'class': 'dashUUIDAnchor'
         })
 
         path = '%s#%s' % (filename, anchor_name)
 
-        section_span.insert_before(anchor)
+        section_h2.insert_before(anchor)
+        section_h2.insert_before(uuid_anchor)
 
 def process_variables(session, package_name: str, filename: str, soup):
     for variable_th in soup.select('tr > th'):
@@ -119,16 +121,15 @@ def process_variables(session, package_name: str, filename: str, soup):
             'name': anchor_name,
             'class': 'dashAnchor'
         })
+        uuid_anchor = Tag(name='a', builder=soup.builder, attrs={
+            'name': str(uuid.uuid4()),
+            'class': 'dashUUIDAnchor'
+        })
 
         path = '%s#%s' % (filename, anchor_name)
 
-        #session.add(SearchIndex(
-            #name=name,
-            #type='Variable',
-            #path=path
-        #))
-
         variable_th.insert_before(anchor)
+        variable_th.insert_before(uuid_anchor)
 
 if __name__ == '__main__':
     engine = sqlalchemy.create_engine('sqlite:///%s' % (sqlite_db_path), echo=True)

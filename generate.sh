@@ -1,9 +1,23 @@
 #!/usr/bin/env bash
 
-QE_SRCDIR=/mnt/c/Standalone/qe-6.2.1
+QE_SRCDIR=
+BUILD_DIR=build
+RELEASE_VERSION=
+
+while getopts "i:v:" ARG
+do
+    case $ARG in
+    i)
+        QE_SRCDIR=$OPTARG
+        ;;
+    v)
+        RELEASE_VERSION=$OPTARG
+        ;;
+    esac
+done
+
 QE_DOCDIR=$QE_SRCDIR/Doc
 
-BUILD_DIR=build
 DOCSET_DIR=$BUILD_DIR/QuantumESPRESSO.docset
 CONTENTS_DIR=$DOCSET_DIR/Contents
 RESOURCES_DIR=$CONTENTS_DIR/Resources
