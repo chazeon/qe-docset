@@ -125,7 +125,7 @@
           })
         },
         updateDocsetList: function () {
-          this.$http.get('https://chazeon.github.io/qe-docset/docset.json?_=' + Date.now())
+          this.$http.get('https://qe-docset-archives.oss-cn-beijing.aliyuncs.com/docset.json?_=' + Date.now())
           .then(function (response) {
             this.raw_docsets = response.body
           })
@@ -150,9 +150,7 @@
       },
       watch: {
         raw_data: function (val) {
-          console.log('Ready?')
           if ('tags' in this.raw_data && 'docsets' in this.raw_data) {
-            console.log('Ready.')
             this.updateDocsets()
           }
         }
