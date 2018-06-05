@@ -166,8 +166,11 @@ if __name__ == '__main__':
         ]
     ]
 
-    session.add_all(general_guides)
-    session.add_all(package_specific_guides)
+    for guides in (general_guides, package_specific_guides):
+        session.add_all([
+            guide for guide in guides
+            if os.path.exists(os.path.join(documents_dir, guide.path))
+        ])
 
     for package_name in get_packages():
         process_package(session, package_name)
