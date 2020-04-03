@@ -14,5 +14,7 @@
 	<string>dashtoc</string>
 	<key>dashIndexFilePath</key>
 	<string>index.html</string>
+	<key>DashDocSetFallbackURL</key>
+	<string>https://www.quantum-espresso.org/Doc/</string>
 </dict>
 </plist>
