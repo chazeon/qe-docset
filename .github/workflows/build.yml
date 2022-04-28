@@ -1,0 +1,45 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Build docset
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the master branch
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+  schedule:
+    - cron: '0 0 * * 0'
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch: {}
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+      
+      - name: Setup Python
+        uses: actions/setup-python@v3
+
+      - name: Install dependencies
+        run: |
+          python3 -m pip install -r requirements.txt
+          
+      - name: Scrape and Build
+        run: |
+          mkdir -p qe.docset/Contents/Resources/Documents
+          python3 scripts/scrape.py
+          python3 scripts/vaspdoc2set.py
+          
+      - name: Upload a Build Artifact
+        uses: actions/upload-artifact@v3.0.0
+        with:
+          name: qe.docset
+          path: qe.docset
