@@ -1,2 +1,4 @@
 requests
 requests-cache
+bs4
+lxml

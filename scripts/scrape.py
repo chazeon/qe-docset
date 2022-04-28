@@ -1,15 +1,11 @@
 import re
 from pathlib import Path
-from urllib import response
 import urllib.parse
 from os import makedirs
 from functools import lru_cache
 
-from tqdm.cli import tqdm
-
 import requests
 import requests_cache
-import jinja2
 from bs4 import BeautifulSoup
 
 
