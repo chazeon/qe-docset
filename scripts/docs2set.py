@@ -95,6 +95,5 @@ if __name__ == "__main__":
         for a in soup.select("ul > li > a"):
             title = re.sub(r'^[\d\.]+ ', '', a.text)
             title = re.sub(r'\n', '', title)
-            print(title)
             docset.insert_index(title, "Entry", urljoin(str(path), a["href"]))
             

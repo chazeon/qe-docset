@@ -10,14 +10,14 @@ DOCSET_DOCS = Path(f'{DOCSET_ROOT}/Contents/Resources/Documents')
 def insert_anchor(soup: BeautifulSoup, name: str, type: str, id: str):
     id = id.lstrip("#")
     tag = soup.find(None, {"name": id.lstrip("#")})
-    anchor = BeautifulSoup(f"<a name='//apple_ref/cpp/{type}/{name}' class='dashAnchor' />", features="lxml")
+    anchor = soup.new_tag('a', attrs={'name': f'//apple_ref/cpp/{type}/{name}', 'class':'dashAnchor'})
     tag.insert_after(anchor)
 
 if __name__ == "__main__":
 
     # Input descriptions
 
-    for file in tqdm(DOCSET_DOCS.glob("Doc/INPUT_*.html")):
+    for file in tqdm(list(DOCSET_DOCS.glob("Doc/INPUT_*.html"))):
 
         path = file.relative_to(DOCSET_DOCS)
         soup = BeautifulSoup(open(file), features="lxml")
