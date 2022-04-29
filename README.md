@@ -16,6 +16,7 @@ then run the scripts
 mkdir -p qe.docset/Contents/Resources/Documents
 python3 scripts/scrape.py
 python3 scripts/docs2set.py
+python3 scripts/toc4docs.py
 ```
 
 ## Prebuilt docset
