@@ -69,7 +69,9 @@ if __name__ == "__main__":
 
         for a in soup.select("td > blockquote blockquote > p > a"):
             try:
-                docset.insert_index(a.text.lstrip("&"), "Section", urljoin(str(path), a["href"]))
+                title = a.text.lstrip("&").rstrip(":").strip()
+                if title == title.upper():
+                    docset.insert_index(title, "Section", urljoin(str(path), a["href"]))
             except KeyError:
                 pass
 
