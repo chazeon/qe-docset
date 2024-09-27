@@ -64,7 +64,7 @@ if __name__ == "__main__":
         soup = BeautifulSoup(open(file), features="lxml")
 
         title = get_page_title(soup)
-        command = re.match(r"^(\S+): input description", title).group(1)
+        command = re.match(r"^(.+): input description$", title).group(1)
         docset.insert_index(command, "Command", str(path))
 
         for a in soup.select("td > blockquote blockquote > p > a"):
